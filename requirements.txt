@@ -1,5 +1,5 @@
 Flask
 Flask-RESTful==0.3.10
 opencv-python==4.8.1.78
-imageio[ffmpeg,pyav]==2.31.5
+imageio[ffmpeg,pyav]
 schedule==1.2.1
