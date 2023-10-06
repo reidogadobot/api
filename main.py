@@ -16,9 +16,6 @@ def enviar_mensagem():
     mensagem = "Olá, esta é a rota '/' enviando uma mensagem!"
     return mensagem
 
-if __name__ == '__main__':
-    app.run()
-'''
 # Caminho para o diretório temporário onde os arquivos serão salvos
 diretorio_temporario = "temp"
 
@@ -118,5 +115,4 @@ if __name__ == '__main__':
     scheduler_thread = threading.Thread(target=run_scheduler)
     scheduler_thread.start()
 
-    app.run(debug=True)
-'''
+    app.run()
