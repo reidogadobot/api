@@ -8,6 +8,7 @@ import schedule
 import tempfile
 import time
 import uuid
+import shutil
 
 app = Flask(__name__)
 
@@ -45,11 +46,8 @@ def run_scheduler():
     while True:
         schedule.run_pending()
         time.sleep(1)
+        
 @app.route('/converter', methods=['POST'])
-#nome_arquivo = str(uuid.uuid4())[:8]
-# Caminho completo para o arquivo de saída
-#video_saida = os.path.join(diretorio_temporario, f'{nome_arquivo}.mp4')
-
 def converter_video():
     nome_arquivo = str(uuid.uuid4())[:8]
 # Caminho completo para o arquivo de saída
@@ -99,6 +97,9 @@ def converter_video():
 
         # Fecha o escritor de vídeo
         writer.close()
+
+        # Remove o diretório e todo o seu conteúdo
+        shutil.rmtree(diretorio_frames, ignore_errors=True)
 
         # Retorna o caminho do arquivo de vídeo de saída
         return jsonify({'video_saida': f"download/{nome_arquivo}.mp4"}), 200
