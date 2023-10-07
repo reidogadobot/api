@@ -11,6 +11,8 @@ app = Flask(__name__)
 # Caminho para o diretório temporário onde os arquivos serão salvos
 diretorio_temporario = "temp"
 
+limite_duracao_video = 10
+
 # Função para criar um diretório temporário único para cada solicitação
 def criar_diretorio_temporario():
     return os.path.join(diretorio_temporario)
@@ -23,6 +25,11 @@ def converter_video():
             return jsonify({'error': 'Nenhum arquivo de vídeo foi enviado'}), 400
 
         video_file = request.files['video']
+
+        # Verifica se o arquivo é do tipo WebP
+        if not video_file.filename.endswith('.webp'):
+            return jsonify({'error': 'Apenas arquivos WebP são permitidos'}), 400
+
 
         # Lê o arquivo WebP em um buffer
         video_buffer = video_file.read()
@@ -37,6 +44,13 @@ def converter_video():
         # Salva o buffer no arquivo de entrada
         with open(video_path, 'wb') as video_file:
             video_file.write(video_buffer)
+
+        reader = imageio.get_reader(video_path)
+        duracao_video = len(reader) / reader.get_meta_data()['fps']
+
+        if duracao_video > limite_duracao_video:
+            return jsonify({'error': 'O vídeo excede a duração máxima permitida (11 segundos)'}), 400
+
 
         # Caminho para o arquivo de saída em MP4
         video_saida_path = os.path.join(diretorio_temporario_atual, 'video.mp4')
